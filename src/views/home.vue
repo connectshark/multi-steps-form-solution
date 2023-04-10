@@ -5,7 +5,7 @@
       <ul class=" w-3/5 xl:w-full mx-auto flex items-center justify-between xl:block">
         <li class="uppercase flex items-center xl:mb-8" v-for="(step, index) in stepsHeader">
           <p
-            :class="{ 'bg-primary-light text-primary-purplish' : (index + 1) === stepsCount }"
+            :class="{ 'bg-primary-light text-primary-purplish' : step.activeCount.includes(stepsCount) }"
             class="border border-primary-light text-primary-light text-2xl text-center w-9 rounded-full xl:mr-5"
           >{{ index + 1 }}</p>
           <div class=" hidden xl:block">
@@ -22,19 +22,19 @@
           <StepperDescribe>Please provide your name, email address, and phone number.</StepperDescribe>
           <label class="block mb-4">
             <p class=" text-lg leading-loose">Name</p>
-            <input v-model="form.name" required minlength="1"
+            <input v-model.trim="form.name" required minlength="1"
               class="ring-primary-purplish focus:invalid:ring-primary-strawberry placeholder-shown:ring-neutral-light p-3 outline-none appearance-none w-full ring-2 rounded"
               type="text" placeholder="e.g. Stephen King">
           </label>
           <label class="block mb-4">
             <p class=" text-lg leading-loose">Email Address</p>
-            <input v-model="form.email" required pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$" minlength="3"
+            <input v-model.trim="form.email" required pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$" minlength="3"
               class="ring-primary-purplish focus:invalid:ring-primary-strawberry placeholder-shown:ring-neutral-light p-3 outline-none appearance-none w-full ring-2 rounded"
               type="email" placeholder="e.g. stephenking@lorem.com">
           </label>
           <label class="block mb-4">
             <p class=" text-lg leading-loose">Phone Number</p>
-            <input required  v-model="form.phone"
+            <input required  v-model.trim="form.phone" pattern="^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]\d{3}[\s.-]\d{4}$" maxlength="10"
               class="ring-primary-purplish focus:invalid:ring-primary-strawberry placeholder-shown:ring-neutral-light p-3 outline-none appearance-none w-full ring-2 rounded"
               type="tel" placeholder="e.g. +1 234 567 890">
           </label>
@@ -42,8 +42,6 @@
 
 
         <template v-if="stepsCount === 2">
-
-
           <StepperTitle>Select your plan</StepperTitle>
           <StepperDescribe>You have the option of monthly or yearly billing.</StepperDescribe>
           <div class=" xl:flex items-center justify-between xl:mb-8 xl:space-x-4">
@@ -131,10 +129,13 @@
         </template>
       </div>
 
-      <div class="bg-white p-4 flex items-center justify-between xl:w-5/6 xl:mx-auto">
-        <button :disabled="stepsCount <= 1" @click="stepsCount -= 1" type="button">Go Back</button>
+      <div class="bg-white p-4 flex items-center justify-end xl:w-5/6 xl:mx-auto" v-if="stepsCount <= 4">
+        <button class=" mr-auto" v-show="stepsCount !== 1" :disabled="stepsCount <= 1" @click="stepsCount -= 1" type="button">Go Back</button>
         <button :disabled="stepsCount >= 5" @click="stepsCount += 1"
-          class=" bg-primary-marine text-neutral-light rounded-xl px-7 py-3" type="button">Next Step</button>
+          :class="{
+            'bg-primary-purplish' : stepsCount === 4
+          }"
+          class=" bg-primary-marine text-neutral-light rounded-xl px-7 py-3" type="button">{{ stepsCount === 4 ? 'Confirm' : 'Next Step' }}</button>
       </div>
     </div>
   </div>
@@ -153,23 +154,35 @@ const form = reactive({
   name: '',
   email: '',
   phone: '',
-  plans: '',
+  plans: 'arcade',
   isYearPlan: false,
   addOns: []
 })
 
+const verifiers = [
+  {
+    verifier: () => {
+      form.name !== '' && form.email !== '' && form.phone !== ''
+    }
+  }
+]
+
 const stepsHeader = [
   {
-    title: 'your info'
+    title: 'your info',
+    activeCount: [1]
   },
   {
-    title: 'select plan'
+    title: 'select plan',
+    activeCount: [2]
   },
   {
-    title: 'add-ons'
+    title: 'add-ons',
+    activeCount: [3]
   },
   {
-    title: 'Summary'
+    title: 'Summary',
+    activeCount: [4, 5]
   }
 ]
 
@@ -197,5 +210,5 @@ const totalPrice = computed(() => {
   }
 })
 
-const stepsCount = ref(1);
+const stepsCount = ref(1)
 </script>
