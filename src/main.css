@@ -4,17 +4,19 @@
 
 @layer base {
   :root {
-    --color-purple: 122 106 225;
-    --primary-marine: hsl(213, 96%, 18%);
-    --primary-purplish: hsl(243, 100%, 62%);
-    --primary-pastel: hsl(228, 100%, 84%);
-    --primary-light: hsl(206, 94%, 87%);
-    --primary-strawberry: hsl(354, 84%, 57%);
+    --primary-marine: 2 41 90;
+    --primary-purplish: 71 61 255;
+    --primary-pastel: 173 190 255;
+    --primary-light: 191 226 253;
+    --primary-strawberry: 237 53 72;
 
-    --neutral-cool: hsl(231, 11%, 63%);
-    --neutral-light: hsl(229, 24%, 87%);
-    --neutral-magnolia: hsl(217, 100%, 97%);
-    --neutral-alabaster: hsl(231, 100%, 99%);
-    --white: hsl(0, 0%, 100%);
+    --neutral-cool: 150 153 171;
+    --neutral-light: 214 217 230;
+    --neutral-magnolia: 240 246 255;
+    --neutral-alabaster: 250 251 255;
+    --white: 255 255 255;
+  }
+  .min-mobile {
+    min-height: calc(100svh - 106px);
   }
 }
