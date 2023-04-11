@@ -20,3 +20,13 @@
     min-height: calc(100svh - 106px);
   }
 }
+
+.aside-bg {
+  background-image: url('./svg/bg-sidebar-mobile.svg');
+}
+
+@media screen and (min-width: 1280px) {
+  .aside-bg {
+    background-image: url('./svg/bg-sidebar-desktop.svg');
+  }
+}
