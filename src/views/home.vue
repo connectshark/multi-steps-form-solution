@@ -21,24 +21,64 @@
           <StepperTitle>Personal info</StepperTitle>
           <StepperDescribe>Please provide your name, email address, and phone number.</StepperDescribe>
           <label class="block mb-4">
-            <p class=" text-lg leading-loose">Name</p>
-            <input v-model.trim="form.name" required minlength="1"
-              class="ring-primary-purplish focus:invalid:ring-primary-strawberry placeholder-shown:ring-neutral-light p-3 outline-none appearance-none w-full ring-2 rounded"
-              type="text" placeholder="e.g. Stephen King">
+            <h3 class="text-lg leading-loose flex items-center justify-between">
+              <span>Name</span>
+              <span v-show="fieldsErr.nameErr" class="text-sm text-primary-strawberry">The field is incorrect.</span>
+              <span v-show="fieldsErr.nameEmpty" class="text-sm text-primary-strawberry">The field is required.</span>
+            </h3>
+            <input
+              v-model.trim="form.name"
+              minlength="1"
+              :class="{
+                'ring-primary-strawberry': fieldsErr.nameErr
+              }"
+              class="hover:ring-primary-purplish ring-primary-purplish  placeholder-shown:ring-neutral-light p-3 outline-none appearance-none w-full ring-2 rounded"
+              type="text"
+              placeholder="e.g. Stephen King"
+              @focus="fieldsErr.nameEmpty = false"
+              @change="validator({
+                testInput: form.name,
+                regex: `^[A-Za-z]+([ \-'][A-Za-z]+)*$`,
+                fieldName: 'nameErr'
+              })"
+            >
           </label>
           <label class="block mb-4">
-            <p class=" text-lg leading-loose">Email Address</p>
-            <input v-model.trim="form.email" required pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+            <h3 class="text-lg leading-loose flex items-center justify-between">
+              <span>Email Address</span>
+              <span v-show="fieldsErr.emailErr" class="text-sm text-primary-strawberry">The field is incorrect.</span>
+              <span v-show="fieldsErr.emailEmpty" class="text-sm text-primary-strawberry">The field is required.</span>
+            </h3>
+            <input
+              v-model.trim="form.email"
               minlength="3"
-              class="ring-primary-purplish focus:invalid:ring-primary-strawberry placeholder-shown:ring-neutral-light p-3 outline-none appearance-none w-full ring-2 rounded"
-              type="email" placeholder="e.g. stephenking@lorem.com">
+              :class="{
+                'ring-primary-strawberry': fieldsErr.emailErr
+              }"
+              class="hover:ring-primary-purplish ring-primary-purplish placeholder-shown:ring-neutral-light p-3 outline-none appearance-none w-full ring-2 rounded"
+              type="email"
+              @focus="fieldsErr.emailEmpty = false"
+              placeholder="e.g. stephenking@lorem.com"
+              @change="validator({
+                testInput: form.email,
+                regex: `^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$`,
+                fieldName: 'emailErr'
+              })"
+            >
           </label>
           <label class="block mb-4">
-            <p class=" text-lg leading-loose">Phone Number</p>
-            <input required v-model.trim="form.phone" pattern="^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]\d{3}[\s.-]\d{4}$"
+            <h3 class="text-lg leading-loose flex items-center justify-between">
+              <span>Phone Number</span>
+              <span v-show="fieldsErr.phoneEmpty" class="text-sm text-primary-strawberry">The field is required.</span>
+            </h3>
+            <input
+              v-model.trim="form.phone"
               maxlength="10"
-              class="ring-primary-purplish focus:invalid:ring-primary-strawberry placeholder-shown:ring-neutral-light p-3 outline-none appearance-none w-full ring-2 rounded"
-              type="tel" placeholder="e.g. +1 234 567 890">
+              @focus="fieldsErr.phoneEmpty = false"
+              class="hover:ring-primary-purplish ring-primary-purplish placeholder-shown:ring-neutral-light p-3 outline-none appearance-none w-full ring-2 rounded"
+              type="tel"
+              placeholder="e.g. +1 234 567 890"
+            >
           </label>
         </template>
 
@@ -104,7 +144,7 @@
           <StepperTitle>Finishing up</StepperTitle>
           <StepperDescribe>Double-check everything looks OK before confirming.</StepperDescribe>
           <ul class="bg-neutral-magnolia p-4 rounded-lg mb-6">
-            <li class=" flex justify-between items-center border-b border-neutral-light pb-3 mb-3">
+            <li class=" flex justify-between items-center mb-3">
               <div>
                 <h3 class="font-bold">{{ planFinder.title }} ({{ form.isYearPlan ? 'Yearly' : 'Monthly' }})</h3>
                 <button
@@ -115,11 +155,13 @@
               <p class=" font-bold">${{ form.isYearPlan ? planFinder.yearPrice : planFinder.monthPrice }}/{{
                 form.isYearPlan ? 'yr' : 'mo' }}</p>
             </li>
-            <li v-for="add in addOnFilter" :key="add.id" class=" flex justify-between items-center mb-3">
-              <h3 class=" text-neutral-cool">{{ add.title }}</h3>
-              <p class=" font-medium">+${{ form.isYearPlan ? add.yearPrice : add.monthPrice }}/{{ form.isYearPlan ? 'yr' :
+            <div v-if="addOnFilter.length > 0" class="border-t border-neutral-light pt-3">
+              <li v-for="add in addOnFilter" :key="add.id" class=" flex justify-between items-center mb-3">
+                <h3 class=" text-neutral-cool">{{ add.title }}</h3>
+                <p class=" font-medium">+${{ form.isYearPlan ? add.yearPrice : add.monthPrice }}/{{ form.isYearPlan ? 'yr' :
                 'mo' }}</p>
-            </li>
+              </li>
+            </div>
           </ul>
 
           <div class=" px-3 flex justify-between items-center">
@@ -143,7 +185,7 @@
       <div class="bg-white p-4 flex items-center justify-end xl:w-5/6 xl:mx-auto" v-if="stepsCount <= 4">
         <button class="hover:opacity-80 transition-opacity mr-auto" v-show="stepsCount !== 1" :disabled="stepsCount <= 1"
           @click="stepsCount -= 1" type="button">Go Back</button>
-        <button :disabled="stepsCount >= 5" @click="stepsCount += 1" :class="{
+        <button :disabled="stepsCount >= 5" @click="checkToNext" :class="{
           'bg-primary-purplish': stepsCount === 4
         }" class=" bg-primary-marine text-neutral-light rounded-xl px-7 py-3 hover:opacity-80 transition-opacity"
           type="button">{{ stepsCount === 4 ? 'Confirm' : 'Next Step' }}</button>
@@ -170,13 +212,21 @@ const form = reactive({
   addOns: []
 })
 
-const verifiers = [
-  {
-    verifier: () => {
-      form.name !== '' && form.email !== '' && form.phone !== ''
-    }
+const validator = ({testInput, regex, fieldName}) => {
+  const regexExp = new RegExp(regex)
+  const res = regexExp.test(testInput)
+  if (!res) {
+    fieldsErr[fieldName] = true
   }
-]
+}
+
+const fieldsErr = reactive({
+  nameEmpty: false,
+  nameErr : false,
+  emailEmpty: false,
+  emailErr: false,
+  phoneEmpty: false,
+})
 
 const stepsHeader = [
   {
@@ -222,4 +272,34 @@ const totalPrice = computed(() => {
 })
 
 const stepsCount = ref(1)
+
+const emptyChecker = () => {
+  if (form.email !== '' && form.phone !== '' && form.name !== '') {
+    return false
+  }
+  if (form.email === '') {
+    fieldsErr.emailErr = false
+    fieldsErr.emailEmpty = true
+  }
+  if (form.name === '') {
+    fieldsErr.nameErr = false
+    fieldsErr.nameEmpty = true
+  }
+  if (form.phone === '') {
+    fieldsErr.phoneEmpty = true
+  }
+  return true
+}
+
+const checkToNext = () => {
+  if (stepsCount.value === 1) {
+    if (fieldsErr.emailErr || fieldsErr.nameErr) {
+      return
+    }
+    if (emptyChecker()) {
+      return
+    }
+  }
+  stepsCount.value++
+}
 </script>

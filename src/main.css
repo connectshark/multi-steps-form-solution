@@ -16,17 +16,17 @@
     --neutral-alabaster: 250 251 255;
     --white: 255 255 255;
   }
-  .min-mobile {
-    min-height: calc(100svh - 106px);
-  }
 }
 
+.min-mobile {
+  min-height: calc(100svh - 106px);
+}
 .aside-bg {
-  background-image: url('./svg/bg-sidebar-mobile.svg');
+  background-image: url('https://raw.githubusercontent.com/connectshark/multi-steps-form-solution/f922fa977de4f7fb8fafce7f11ea396085fbe15c/public/svg/bg-sidebar-mobile.svg');
 }
 
 @media screen and (min-width: 1280px) {
   .aside-bg {
-    background-image: url('./svg/bg-sidebar-desktop.svg');
+    background-image: url('https://raw.githubusercontent.com/connectshark/multi-steps-form-solution/f922fa977de4f7fb8fafce7f11ea396085fbe15c/public/svg/bg-sidebar-desktop.svg');
   }
 }
