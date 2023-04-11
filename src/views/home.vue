@@ -195,11 +195,10 @@
 </template>
 
 <script setup>
-import { reactive, ref } from 'vue'
+import { reactive, ref, computed } from 'vue'
 import StepperTitle from '../components/stepperTitle.vue'
 import StepperDescribe from '../components/stepperDescribe.vue'
 import { useFormStore } from '../store/index'
-import { computed } from '@vue/reactivity'
 
 const { plansOptions, addOnsOptions } = useFormStore()
 
