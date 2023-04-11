@@ -1,11 +1,11 @@
 <template>
   <div class="xl:w-[1000px] xl:h-[600px] xl:bg-white xl:p-3 xl:flex xl:items-center xl:rounded-xl xl:shadow-xl">
     <aside
-      class="xl:bg-[url('./svg/bg-sidebar-desktop.svg')] xl:h-full xl:w-1/3 xl:rounded-xl xl:p-10 bg-primary-purplish pt-10 pb-32 bg-[url('./svg/bg-sidebar-mobile.svg')] bg-no-repeat bg-center bg-cover -mb-24 xl:mb-0">
+      class="xl:h-full xl:w-1/3 xl:rounded-xl xl:p-10 bg-primary-purplish pt-10 pb-32 aside-bg bg-no-repeat bg-center bg-cover -mb-24 xl:mb-0">
       <ul class=" w-3/5 xl:w-full mx-auto flex items-center justify-between xl:block">
         <li class="uppercase flex items-center xl:mb-8" v-for="(step, index) in stepsHeader">
           <p
-            :class="{ 'bg-primary-light text-primary-purplish' : step.activeCount.includes(stepsCount) }"
+            :class="{ 'bg-primary-light text-primary-purplish': step.activeCount.includes(stepsCount) }"
             class="border border-primary-light text-primary-light text-2xl text-center w-9 rounded-full xl:mr-5"
           >{{ index + 1 }}</p>
           <div class=" hidden xl:block">
@@ -28,13 +28,15 @@
           </label>
           <label class="block mb-4">
             <p class=" text-lg leading-loose">Email Address</p>
-            <input v-model.trim="form.email" required pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$" minlength="3"
+            <input v-model.trim="form.email" required pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+              minlength="3"
               class="ring-primary-purplish focus:invalid:ring-primary-strawberry placeholder-shown:ring-neutral-light p-3 outline-none appearance-none w-full ring-2 rounded"
               type="email" placeholder="e.g. stephenking@lorem.com">
           </label>
           <label class="block mb-4">
             <p class=" text-lg leading-loose">Phone Number</p>
-            <input required  v-model.trim="form.phone" pattern="^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]\d{3}[\s.-]\d{4}$" maxlength="10"
+            <input required v-model.trim="form.phone" pattern="^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]\d{3}[\s.-]\d{4}$"
+              maxlength="10"
               class="ring-primary-purplish focus:invalid:ring-primary-strawberry placeholder-shown:ring-neutral-light p-3 outline-none appearance-none w-full ring-2 rounded"
               type="tel" placeholder="e.g. +1 234 567 890">
           </label>
@@ -45,24 +47,26 @@
           <StepperTitle>Select your plan</StepperTitle>
           <StepperDescribe>You have the option of monthly or yearly billing.</StepperDescribe>
           <div class=" xl:flex items-center justify-between xl:mb-8 xl:space-x-4">
-          <label v-for="option in plansOptions" :class="{
-            'ring-primary-purplish bg-neutral-magnolia': form.plans === option.id
-          }"
-            class="p-6 xl:p-4 py-4 mb-4 cursor-pointer rounded-2xl block hover:ring-primary-purplish ring-2 ring-neutral-light xl:mb-0 xl:w-1/3">
-            <input v-model="form.plans" class="absolute opacity-0 -z-10" type="radio" name="plan" :value="option.id">
-            <div class=" flex items-center xl:block">
-              <img class=" mr-4 xl:mr-0 xl:mb-10" :src="`./icon/${option.icon}.svg`" alt="icon">
-              <div>
-                <h3 class="text-xl font-bold">{{ option.title }}</h3>
-                <p class="text-neutral-cool">${{ form.isYearPlan ? option.yearPrice : option.monthPrice }}/{{ form.isYearPlan ? 'yr' : 'mo' }}</p>
-                <p v-show="form.isYearPlan" class=" font-medium">2 months free</p>
+            <label v-for="option in plansOptions" :class="{
+              'ring-primary-purplish bg-neutral-magnolia': form.plans === option.id
+            }"
+              class="p-6 xl:p-4 py-4 mb-4 cursor-pointer rounded-2xl block hover:ring-primary-purplish ring-2 ring-neutral-light xl:mb-0 xl:w-1/3">
+              <input v-model="form.plans" class="absolute opacity-0 -z-10" type="radio" name="plan" :value="option.id">
+              <div class=" flex items-center xl:block">
+                <img class=" mr-4 xl:mr-0 xl:mb-10" :src="`./icon/${option.icon}.svg`" alt="icon">
+                <div>
+                  <h3 class="text-xl font-bold">{{ option.title }}</h3>
+                  <p class="text-neutral-cool">${{ form.isYearPlan ? option.yearPrice : option.monthPrice }}/{{
+                    form.isYearPlan ? 'yr' : 'mo' }}</p>
+                  <p v-show="form.isYearPlan" class=" font-medium">2 months free</p>
+                </div>
               </div>
-            </div>
-          </label>
+            </label>
           </div>
           <div class=" flex items-center justify-evenly bg-neutral-magnolia rounded-2xl py-5 text-lg font-bold">
             <p :class="{ 'text-neutral-cool': form.isYearPlan }">Monthly</p>
-            <button type="button" @click="form.isYearPlan = !form.isYearPlan" class=" bg-primary-marine p-1 rounded-3xl w-12">
+            <button type="button" @click="form.isYearPlan = !form.isYearPlan"
+              class=" bg-primary-marine p-1 rounded-3xl w-12">
               <span :class="{ 'ml-auto': form.isYearPlan }" class=" bg-white w-4 h-4 block rounded-full"></span>
             </button>
             <p :class="{ 'text-neutral-cool': !form.isYearPlan }">Yearly</p>
@@ -74,7 +78,8 @@
           <StepperTitle>Pick add-ons</StepperTitle>
           <StepperDescribe>Add-ons help enhance your gaming experience.</StepperDescribe>
           <template v-for="option in addOnsOptions">
-            <input type="checkbox" v-model="form.addOns" :value="option.id" :id="option.id" class="absolute opacity-0 -z-10">
+            <input type="checkbox" v-model="form.addOns" :value="option.id" :id="option.id"
+              class="absolute opacity-0 -z-10">
             <label :for="option.id" :class="{
               'bg-neutral-magnolia ring-primary-purplish': form.addOns.includes(option.id)
             }"
@@ -89,7 +94,8 @@
                 <h3 class="text-xl font-bold">{{ option.title }}</h3>
                 <p class="text-neutral-cool">{{ option.description }}</p>
               </div>
-              <div class="ml-auto text-primary-purplish shrink-0">+${{ form.isYearPlan ? option.yearPrice : option.monthPrice }}/{{ form.isYearPlan ? 'yr' : 'mo' }}</div>
+              <div class="ml-auto text-primary-purplish shrink-0">+${{ form.isYearPlan ? option.yearPrice :
+                option.monthPrice }}/{{ form.isYearPlan ? 'yr' : 'mo' }}</div>
             </label>
           </template>
 
@@ -101,13 +107,18 @@
             <li class=" flex justify-between items-center border-b border-neutral-light pb-3 mb-3">
               <div>
                 <h3 class="font-bold">{{ planFinder.title }} ({{ form.isYearPlan ? 'Yearly' : 'Monthly' }})</h3>
-                <button @click="stepsCount = 1" class="font-medium text-neutral-cool underline" type="button">Change</button>
+                <button
+                  @click="stepsCount = 1"
+                  class="font-medium text-neutral-cool underline hover:text-primary-purplish"
+                  type="button">Change</button>
               </div>
-              <p class=" font-bold">${{ form.isYearPlan ? planFinder.yearPrice : planFinder.monthPrice }}/{{ form.isYearPlan ? 'yr' : 'mo' }}</p>
+              <p class=" font-bold">${{ form.isYearPlan ? planFinder.yearPrice : planFinder.monthPrice }}/{{
+                form.isYearPlan ? 'yr' : 'mo' }}</p>
             </li>
             <li v-for="add in addOnFilter" :key="add.id" class=" flex justify-between items-center mb-3">
               <h3 class=" text-neutral-cool">{{ add.title }}</h3>
-              <p class=" font-medium">+${{ form.isYearPlan ? add.yearPrice : add.monthPrice }}/{{ form.isYearPlan ? 'yr' : 'mo' }}</p>
+              <p class=" font-medium">+${{ form.isYearPlan ? add.yearPrice : add.monthPrice }}/{{ form.isYearPlan ? 'yr' :
+                'mo' }}</p>
             </li>
           </ul>
 
@@ -130,12 +141,12 @@
       </div>
 
       <div class="bg-white p-4 flex items-center justify-end xl:w-5/6 xl:mx-auto" v-if="stepsCount <= 4">
-        <button class=" mr-auto" v-show="stepsCount !== 1" :disabled="stepsCount <= 1" @click="stepsCount -= 1" type="button">Go Back</button>
-        <button :disabled="stepsCount >= 5" @click="stepsCount += 1"
-          :class="{
-            'bg-primary-purplish' : stepsCount === 4
-          }"
-          class=" bg-primary-marine text-neutral-light rounded-xl px-7 py-3" type="button">{{ stepsCount === 4 ? 'Confirm' : 'Next Step' }}</button>
+        <button class="hover:opacity-80 transition-opacity mr-auto" v-show="stepsCount !== 1" :disabled="stepsCount <= 1"
+          @click="stepsCount -= 1" type="button">Go Back</button>
+        <button :disabled="stepsCount >= 5" @click="stepsCount += 1" :class="{
+          'bg-primary-purplish': stepsCount === 4
+        }" class=" bg-primary-marine text-neutral-light rounded-xl px-7 py-3 hover:opacity-80 transition-opacity"
+          type="button">{{ stepsCount === 4 ? 'Confirm' : 'Next Step' }}</button>
       </div>
     </div>
   </div>
