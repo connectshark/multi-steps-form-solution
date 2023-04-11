@@ -214,9 +214,7 @@ const form = reactive({
 const validator = ({testInput, regex, fieldName}) => {
   const regexExp = new RegExp(regex)
   const res = regexExp.test(testInput)
-  if (!res) {
-    fieldsErr[fieldName] = true
-  }
+  fieldsErr[fieldName] = !res
 }
 
 const fieldsErr = reactive({
